@@ -1,13 +1,11 @@
 package com.visualvault.visual_vault_project.entity;
 
-import java.util.Set;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,18 +13,22 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "etiquetas")
+@Table(name = "video_categoria")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Etiqueta {
+public class VideoCategoria {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idEtiqueta;
+    private Long idVideoCategoria;
 
-    private String nombre;
+    @ManyToOne
+    @JoinColumn(name = "id_video", nullable = false)
+    private Video video;
 
-    @OneToMany(mappedBy = "etiqueta", cascade = CascadeType.ALL)
-    private Set<VideoEtiqueta> videos;
+    @ManyToOne
+    @JoinColumn(name = "id_categoria", nullable = false)
+    private Categoria categoria;
 }

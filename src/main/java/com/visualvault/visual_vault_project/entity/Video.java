@@ -25,7 +25,7 @@ public class Video {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_video;
+    private Long idVideo;
 
     @ManyToOne
     @JoinColumn(name = "id_usuario", nullable = false)
