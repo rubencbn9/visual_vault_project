@@ -3,6 +3,8 @@ package com.visualvault.visual_vault_project.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,7 +30,7 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     
     private Long idUsuario;
-    private String nombre;
+    private String username;
 
     @Column(unique = true, nullable = false)
     private String email;
@@ -39,6 +41,7 @@ public class Usuario {
 
      // Relación con videos
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Video> videos;
 
     // Relación con listas
