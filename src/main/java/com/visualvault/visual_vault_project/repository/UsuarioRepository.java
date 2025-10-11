@@ -8,7 +8,7 @@ import com.visualvault.visual_vault_project.entity.Usuario;
 
 public interface UsuarioRepository extends JpaRepository<Usuario,Long> {
     
-    Usuario findByNombre (String nombre);
-    Usuario findByIdentificacion(Long id);
-    List<Usuario> findByNombreContainingIgnoreCase (String nombre);
+    Usuario findByUsername (String username);
+    Usuario findByIdUsuario(Long idUsuario);
+    List<Usuario> findByUsernameContainingIgnoreCase (String username);
 }

@@ -35,7 +35,7 @@ public class ListaController {
     // 🔹 Listar listas de un usuario
     @GetMapping("/usuario/{usuarioId}")
     public ResponseEntity<List<Lista>> obtenerListasPorUsuario(@PathVariable Long usuarioId) {
-        List<Lista> listas = listaService.obtenerListasPorUsuario(usuarioId);
+        List<Lista> listas = listaService.findByUsuario_IdUsuario(usuarioId);
         return ResponseEntity.ok(listas);
     }
 

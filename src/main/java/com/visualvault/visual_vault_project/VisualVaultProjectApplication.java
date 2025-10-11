@@ -28,7 +28,7 @@ public class VisualVaultProjectApplication {
                     .build();
             usuarioRepository.save(usuario);
 
-            // Crear video asignándole el usuario
+            //  Crear video asignándole el usuario
             Video video = Video.builder()
                     .titulo("Mi primer video")
                     .descripcion("Un video de prueba")

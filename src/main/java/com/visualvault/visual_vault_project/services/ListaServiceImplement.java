@@ -31,7 +31,7 @@ public class ListaServiceImplement  implements ListaService{
     return listaRepository.save(lista);
    }
 
-public List<Lista> obtenerListasPorUsuario(Long usuarioId) {
+public List<Lista> findByUsuario_IdUsuario(Long usuarioId) {
     Usuario usuario = usuarioRepository.findById(usuarioId)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + usuarioId));
     

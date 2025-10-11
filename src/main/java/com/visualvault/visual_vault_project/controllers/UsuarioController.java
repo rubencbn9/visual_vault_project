@@ -51,7 +51,7 @@ public class UsuarioController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getUsuarioById(@PathVariable Long id) {
         try {
-            Usuario usuario = usuarioRepository.findByIdentificacion(id);
+            Usuario usuario = usuarioRepository.findByIdUsuario(id);
             if (usuario != null) {
                 return ResponseEntity.ok(usuario);
             } else {

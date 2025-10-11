@@ -8,7 +8,7 @@ public interface ListaService {
 
     Lista crearLista(Lista lista);
 
-    List<Lista> obtenerListasPorUsuario(Long usuarioId);
+    List<Lista> findByUsuario_IdUsuario(Long usuarioId);
 
     Lista agregarVideo(Long listaId, Long videoId);
 

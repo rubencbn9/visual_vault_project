@@ -8,5 +8,5 @@ import com.visualvault.visual_vault_project.entity.Lista;
 
 public interface ListaRepository extends JpaRepository<Lista ,Long>{
     
-    List<Lista> obtenerListasPorUsuario(Long usuarioId);
+    List<Lista> findByUsuario_IdUsuario(Long idUsuario);
 }

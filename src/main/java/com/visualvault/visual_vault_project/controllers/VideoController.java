@@ -66,7 +66,8 @@ public class VideoController {
     //         schema = @Schema(implementation = Video.class))),
     //     @ApiResponse(responseCode = "400", description = "Error en los datos enviados", content = @Content)
     // })
-    @PostMapping
+    
+    @PostMapping("/send")
     public ResponseEntity<Video> createVideo(@Valid @RequestBody VideoRequest videoRequest) {
         Usuario usuario = usuarioRepository.findById(videoRequest.usuarioId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuario no válido"));
@@ -86,6 +87,7 @@ public class VideoController {
     //     @ApiResponse(responseCode = "204", description = "Video eliminado exitosamente"),
     //     @ApiResponse(responseCode = "404", description = "Video no encontrado", content = @Content)
     // })
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteVideo(@PathVariable Long id) {
         if (!videoRepository.existsById(id)) {

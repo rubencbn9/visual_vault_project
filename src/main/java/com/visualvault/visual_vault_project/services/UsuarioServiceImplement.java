@@ -4,10 +4,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Service;
 
 import com.visualvault.visual_vault_project.entity.Usuario;
 import com.visualvault.visual_vault_project.repository.UsuarioRepository;
 
+@Service
 public class UsuarioServiceImplement implements UsuarioService {
 
     @Autowired
@@ -19,7 +21,7 @@ public class UsuarioServiceImplement implements UsuarioService {
     }
 
     public Usuario añadir(Usuario usuario) {
-        if (usuarioRepository.findByNombre(usuario.getUsername()) != null)
+        if (usuarioRepository.findByUsername(usuario.getUsername()) != null)
             return null;
         try {
             return usuarioRepository.save(usuario);
@@ -55,7 +57,7 @@ public class UsuarioServiceImplement implements UsuarioService {
 
     public List<Usuario> buscarPorNombre(String textoNombre) {
         textoNombre = textoNombre.toLowerCase();
-        List<Usuario> encontrados = usuarioRepository.findByNombreContainingIgnoreCase(textoNombre);
+        List<Usuario> encontrados = usuarioRepository.findByUsernameContainingIgnoreCase(textoNombre);
 
         return encontrados;
     }
@@ -75,7 +77,7 @@ public class UsuarioServiceImplement implements UsuarioService {
     }
 
     public Usuario getUsuarioByNombre(String nombre) {
-        return usuarioRepository.findByNombre(nombre);
+        return usuarioRepository.findByUsername(nombre);
     }
 
 }
