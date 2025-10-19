@@ -1,6 +1,7 @@
 package com.visualvault.visual_vault_project.entity;
 
 import java.util.List;
+import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -34,5 +35,7 @@ public class Lista {
     private Usuario usuario;
 
     @OneToMany(mappedBy = "lista", cascade = CascadeType.ALL)
-    private List<VideoLista> listas;
+    private List<VideoLista> video;
+
+
 }

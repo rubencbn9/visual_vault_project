@@ -28,5 +28,5 @@ public class Etiqueta {
     private String nombre;
 
     @OneToMany(mappedBy = "etiqueta", cascade = CascadeType.ALL)
-    private Set<VideoEtiqueta> videos;
+    private Set<VideoEtiqueta> video;
 }

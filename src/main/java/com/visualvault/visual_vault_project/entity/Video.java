@@ -1,6 +1,7 @@
 package com.visualvault.visual_vault_project.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -40,6 +41,8 @@ public class Video {
     private String miniaturaUrl;
     private String fuente;
     private String estado;
+     private Boolean visto = false;
+    // private String categoria;
     private LocalDateTime fechaGuardado = LocalDateTime.now();
 
     @OneToMany(mappedBy = "video", cascade = CascadeType.ALL)

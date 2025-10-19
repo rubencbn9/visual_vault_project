@@ -30,5 +30,5 @@ public class Categoria {
     private String nombre;
 
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
-    private Set<VideoCategoria> videos;
+    private Set<VideoCategoria> video;
 }

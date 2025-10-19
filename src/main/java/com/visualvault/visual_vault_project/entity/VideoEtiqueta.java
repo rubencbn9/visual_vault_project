@@ -23,6 +23,8 @@ public class VideoEtiqueta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idVideoEtiqueta;
 
+    private String nombre;
+
     @ManyToOne
     @JoinColumn(name = "id_video", nullable = false)
     private Video video;
@@ -30,4 +32,10 @@ public class VideoEtiqueta {
     @ManyToOne
     @JoinColumn(name = "id_etiqueta", nullable = false)
     private Etiqueta etiqueta;
+
+    
+      public VideoEtiqueta(String nombre, Video video) {
+        this.nombre = nombre;
+        this.video = video;
+    }
 }
