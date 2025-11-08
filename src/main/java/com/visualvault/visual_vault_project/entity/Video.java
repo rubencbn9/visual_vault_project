@@ -1,7 +1,6 @@
 package com.visualvault.visual_vault_project.entity;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -45,10 +44,15 @@ public class Video {
     // private String categoria;
     private LocalDateTime fechaGuardado = LocalDateTime.now();
 
-    @OneToMany(mappedBy = "video", cascade = CascadeType.ALL)
-    private Set<VideoCategoria> categorias;
+    // @OneToMany(mappedBy = "video", cascade = CascadeType.ALL)
+    // private Set<VideoCategoria> categorias;
+
+    @ManyToOne
+    @JoinColumn(name = "id_categoria", nullable = false)
+    private Categoria categoria;
 
     @OneToMany(mappedBy = "video", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<VideoEtiqueta> etiquetas;
 
     @OneToMany(mappedBy = "video", cascade = CascadeType.ALL)

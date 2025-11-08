@@ -2,6 +2,8 @@ package com.visualvault.visual_vault_project.entity;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 // import jakarta.persistence.CascadeType;
 // import jakarta.persistence.Entity;
@@ -29,6 +31,10 @@ public class Categoria {
 
     private String nombre;
 
+    // @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
+    // private Set<VideoCategoria> video;
+    
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
-    private Set<VideoCategoria> video;
+    @JsonIgnore
+    private Set<Video> videos;
 }

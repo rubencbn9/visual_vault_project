@@ -1,14 +1,19 @@
 package com.visualvault.visual_vault_project;
 
+import java.time.LocalDateTime;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import com.visualvault.visual_vault_project.entity.Categoria;
 import com.visualvault.visual_vault_project.entity.Usuario;
 import com.visualvault.visual_vault_project.entity.Video;
+import com.visualvault.visual_vault_project.repository.CategoriaRepository;
 import com.visualvault.visual_vault_project.repository.UsuarioRepository;
 import com.visualvault.visual_vault_project.repository.VideoRepository;
+import com.visualvault.visual_vault_project.services.CategoriaService;
 
 @SpringBootApplication
 public class VisualVaultProjectApplication {
@@ -18,21 +23,32 @@ public class VisualVaultProjectApplication {
 	}
 
 	 @Bean
-    CommandLineRunner initDatabase(UsuarioRepository usuarioRepository, VideoRepository videoRepository) {
+    CommandLineRunner initDatabase(UsuarioRepository usuarioRepository, VideoRepository videoRepository, CategoriaService categoriaService) {
         return args -> {
             // Crear usuario
-            Usuario usuario = Usuario.builder()
-                    .username("juan123")
-                    .email("juan@example.com")
+            Usuario usuario1 = Usuario.builder()
+                    .username("Ruben")
+                    .email("ruben@example.com")
                     .contrasenaHash("1234")
                     .build();
-            usuarioRepository.save(usuario);
+            usuarioRepository.save(usuario1);
+
+            // Crear categoria 
+            Categoria gaming = categoriaService.crearcategoria(new Categoria(null,"Gaming", null));    
+        Categoria entretenimiento = categoriaService.crearcategoria(new Categoria(null,"Entretenimiento", null));    
+        Categoria educacion = categoriaService.crearcategoria(new Categoria(null, "Educacion", null));
+                    
 
             //  Crear video asignándole el usuario
             Video video = Video.builder()
                     .titulo("Mi primer video")
                     .descripcion("Un video de prueba")
-                    .usuario(usuario) 
+                    .fuente("YouTube")
+                    .categoria(educacion)
+                    .usuario(usuario1)
+                    .miniaturaUrl("https://img.youtube.com/vi/Jp7sf6CUaxU/hqdefault.jpg")
+                    .url("https://www.youtube.com/watch?v=Jp7sf6CUaxU&pp=0gcJCfwJAYcqIYzv")
+                    .fechaGuardado(LocalDateTime.of(2025, 10, 19, 15, 30, 0)) 
                     .build();
             videoRepository.save(video);
 

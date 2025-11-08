@@ -6,7 +6,7 @@ public record VideoCreateDTO(
                 String titulo,
                 String descripcion,
                 String url,
-                String plataforma,
+                String fuente,
                 String miniaturaUrl,
                 Boolean visto,
                 String categoria,

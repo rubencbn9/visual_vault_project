@@ -20,8 +20,10 @@ import com.visualvault.visual_vault_project.dto.VideoResponseDTO;
 import com.visualvault.visual_vault_project.entity.Usuario;
 import com.visualvault.visual_vault_project.entity.Video;
 import com.visualvault.visual_vault_project.mapper.VideoMapper;
+import com.visualvault.visual_vault_project.repository.CategoriaRepository;
 import com.visualvault.visual_vault_project.repository.UsuarioRepository;
 import com.visualvault.visual_vault_project.repository.VideoRepository;
+import com.visualvault.visual_vault_project.services.ThumbnailService;
 
 import jakarta.validation.Valid;
 
@@ -38,7 +40,13 @@ public class VideoController {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    // 🔹 GET: Lista todos los videos
+    @Autowired
+    private CategoriaRepository categoriaRepository;
+
+    @Autowired
+    private ThumbnailService thumbnailService;
+
+    //  Lista todos los videos
     @GetMapping("/list")
     public List<VideoResponseDTO> listaVideos() {
         return videoRepository.findAll()
@@ -47,7 +55,7 @@ public class VideoController {
                 .toList();
     }
 
-    // 🔹 GET: Obtener video por ID
+    //  Obtener video por ID
     @GetMapping("/{id}")
     public ResponseEntity<VideoResponseDTO> getVideoById(@PathVariable Long id) {
         Video video = videoRepository.findById(id)
@@ -56,24 +64,29 @@ public class VideoController {
         return ResponseEntity.ok(VideoMapper.toDTO(video));
     }
 
-    // 🔹 POST: Crear nuevo video
+    //  Crear nuevo video
     @PostMapping("/send")
-    public ResponseEntity<VideoResponseDTO> createVideo(@Valid @RequestBody VideoCreateDTO videoDTO) {
-        // Buscar usuario
+public ResponseEntity<VideoResponseDTO> createVideo(@Valid @RequestBody VideoCreateDTO videoDTO) {
+    try {
+        // Buscar usuario falta la gestion de usuarios 
         Usuario usuario = usuarioRepository.findById(videoDTO.usuarioId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuario no válido"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, 
+                    "Usuario no válido"));
 
-        // Convertir DTO → Entidad
-        Video video = VideoMapper.toEntity(videoDTO, usuario);
+        // Convertir DTO a Entidad 
+        Video video = VideoMapper.toEntity(videoDTO, usuario, categoriaRepository, thumbnailService);
 
         // Guardar en base de datos
         Video saved = videoRepository.save(video);
 
         // Devolver entidad convertida a DTO
         return ResponseEntity.status(HttpStatus.CREATED).body(VideoMapper.toDTO(saved));
+    } catch (IllegalArgumentException e) {
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
     }
+}
 
-    // 🔹 DELETE: Eliminar video por ID
+    // Eliminar video por ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteVideo(@PathVariable Long id) {
         if (!videoRepository.existsById(id)) {
