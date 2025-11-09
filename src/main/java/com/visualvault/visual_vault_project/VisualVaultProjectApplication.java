@@ -2,10 +2,12 @@ package com.visualvault.visual_vault_project;
 
 import java.time.LocalDateTime;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.visualvault.visual_vault_project.entity.Categoria;
 import com.visualvault.visual_vault_project.entity.Usuario;
@@ -18,6 +20,9 @@ import com.visualvault.visual_vault_project.services.CategoriaService;
 @SpringBootApplication
 public class VisualVaultProjectApplication {
 
+     @Autowired
+    private PasswordEncoder passwordEncoder;
+
 	public static void main(String[] args) {
 		SpringApplication.run(VisualVaultProjectApplication.class, args);
 	}
@@ -29,7 +34,7 @@ public class VisualVaultProjectApplication {
             Usuario usuario1 = Usuario.builder()
                     .username("Ruben")
                     .email("ruben@example.com")
-                    .contrasenaHash("1234")
+                    .contrasenaHash(passwordEncoder.encode("12345678"))
                     .build();
             usuarioRepository.save(usuario1);
 

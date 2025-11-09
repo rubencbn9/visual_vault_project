@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.visualvault.visual_vault_project.entity.Usuario;
+import com.visualvault.visual_vault_project.entity.Video;
 
 public interface UsuarioRepository extends JpaRepository<Usuario,Long> {
     
