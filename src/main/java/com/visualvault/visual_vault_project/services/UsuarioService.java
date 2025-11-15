@@ -22,6 +22,8 @@ public interface UsuarioService {
      void updateUsuario(Usuario usuario);
 
      Usuario getUsuarioByNombre(String nombre);
+
+     boolean borrarPorUsername(String username);
      
 
 }

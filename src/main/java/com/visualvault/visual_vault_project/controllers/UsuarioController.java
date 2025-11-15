@@ -91,4 +91,16 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+
+
+    // ELIMINAR USUARIO POR USERNAME
+@DeleteMapping("/username/{username}")
+public ResponseEntity<Void> borrarUsuarioPorUsername(@PathVariable String username) {
+    boolean eliminado = usuarioService.borrarPorUsername(username);
+    if (eliminado) {
+        return ResponseEntity.noContent().build();
+    } else {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+}
 }

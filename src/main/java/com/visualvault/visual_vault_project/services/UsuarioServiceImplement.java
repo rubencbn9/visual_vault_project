@@ -77,7 +77,15 @@ public class UsuarioServiceImplement implements UsuarioService {
     }
 
     public Usuario getUsuarioByNombre(String nombre) {
-        return usuarioRepository.findByUsername(nombre);
+        return usuarioRepository.findByUsername(nombre).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
+
+
+    public boolean borrarPorUsername(String username) {
+    Usuario usuario = usuarioRepository.findByUsername(username)
+        .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    usuarioRepository.delete(usuario);
+    return true;
+}
 
 }

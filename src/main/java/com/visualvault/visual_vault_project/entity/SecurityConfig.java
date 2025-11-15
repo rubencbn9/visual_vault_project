@@ -26,10 +26,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+            .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin())) // Oculta frameOptions con sameOrigin
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/h2-console/**").permitAll()
+                .requestMatchers("/favicon.ico").permitAll()
+                .requestMatchers("/api/videos/**").permitAll()
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> 
