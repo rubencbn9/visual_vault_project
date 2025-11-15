@@ -12,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.visualvault.visual_vault_project.entity.Categoria;
 import com.visualvault.visual_vault_project.entity.Usuario;
 import com.visualvault.visual_vault_project.entity.Video;
-import com.visualvault.visual_vault_project.repository.CategoriaRepository;
 import com.visualvault.visual_vault_project.repository.UsuarioRepository;
 import com.visualvault.visual_vault_project.repository.VideoRepository;
 import com.visualvault.visual_vault_project.services.CategoriaService;
