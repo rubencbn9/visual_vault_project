@@ -22,6 +22,12 @@ import com.visualvault.visual_vault_project.entity.JwtUtil;
 import com.visualvault.visual_vault_project.entity.Usuario;
 import com.visualvault.visual_vault_project.repository.UsuarioRepository;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 @RestController
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = { "http://localhost:5500", "http://127.0.0.1:5500" })
@@ -36,24 +42,33 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    // ----------------------------------------------------
+    // REGISTRO
+    // ----------------------------------------------------
+    @Operation(summary = "Registrar nuevo usuario",
+               description = "Crea un nuevo usuario verificando que username y email no existan previamente")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Usuario registrado correctamente",
+            content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = AuthResponseDTO.class))),
+        @ApiResponse(responseCode = "400", description = "Datos inválidos o usuario ya existente", 
+            content = @Content(mediaType = "text/plain")),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor", 
+            content = @Content(mediaType = "text/plain"))
+    })
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequestDTO request) {
         try {
-            // Verificar si el usuario ya existe
             Optional<Usuario> existingUser = usuarioRepository.findByUsername(request.getUsername());
-
             if (existingUser.isPresent()) {
                 return ResponseEntity.badRequest().body("El usuario ya existe");
             }
 
-            // Verificar si el email ya existe
             Optional<Usuario> existingEmail = usuarioRepository.findByEmail(request.getEmail());
-
             if (existingEmail.isPresent()) {
                 return ResponseEntity.badRequest().body("El email ya está registrado");
             }
 
-            // Crear nuevo usuario
             Usuario usuario = Usuario.builder()
                     .username(request.getUsername())
                     .email(request.getEmail())
@@ -63,7 +78,6 @@ public class AuthController {
 
             Usuario savedUsuario = usuarioRepository.save(usuario);
 
-            // Generar token
             String token = jwtUtil.generateToken(savedUsuario.getUsername());
 
             return ResponseEntity.ok(new AuthResponseDTO(token, savedUsuario.getUsername()));
@@ -73,10 +87,23 @@ public class AuthController {
         }
     }
 
+    // ----------------------------------------------------
+    // LOGIN
+    // ----------------------------------------------------
+    @Operation(summary = "Iniciar sesión",
+               description = "Valida las credenciales del usuario y devuelve un token JWT")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Inicio de sesión exitoso",
+            content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = AuthResponseDTO.class))),
+        @ApiResponse(responseCode = "400", description = "Credenciales incorrectas",
+            content = @Content(mediaType = "text/plain")),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor",
+            content = @Content(mediaType = "text/plain"))
+    })
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO request) {
         try {
-            // Buscar usuario
             Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(request.getUsername());
 
             if (!usuarioOpt.isPresent()) {
@@ -85,12 +112,10 @@ public class AuthController {
 
             Usuario usuario = usuarioOpt.get();
 
-            // Verificar contraseña
             if (!passwordEncoder.matches(request.getPassword(), usuario.getContrasenaHash())) {
                 return ResponseEntity.badRequest().body("Contraseña incorrecta");
             }
 
-            // Generar token
             String token = jwtUtil.generateToken(usuario.getUsername());
 
             return ResponseEntity.ok(new AuthResponseDTO(token, usuario.getUsername()));
@@ -100,10 +125,24 @@ public class AuthController {
         }
     }
 
+    // ----------------------------------------------------
+    // DATOS DEL USUARIO LOGUEADO
+    // ----------------------------------------------------
+    @Operation(summary = "Obtener usuario logueado",
+               description = "Devuelve la información del usuario asociada al token enviado")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Usuario encontrado",
+            content = @Content(mediaType = "application/json",
+            schema = @Schema(implementation = Usuario.class))),
+        @ApiResponse(responseCode = "401", description = "Token inválido o expirado",
+            content = @Content(mediaType = "text/plain")),
+        @ApiResponse(responseCode = "404", description = "Usuario no encontrado",
+            content = @Content(mediaType = "text/plain"))
+    })
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(@RequestHeader("Authorization") String authHeader) {
         try {
-            String token = authHeader.substring(7); // Remover "Bearer "
+            String token = authHeader.substring(7);
             String username = jwtUtil.extractUsername(token);
 
             Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(username);
@@ -119,16 +158,29 @@ public class AuthController {
         }
     }
 
+    // ----------------------------------------------------
+    // CAMBIAR CONTRASEÑA
+    // ----------------------------------------------------
+    @Operation(summary = "Cambiar contraseña",
+               description = "Permite al usuario cambiar su contraseña verificando la actual")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Contraseña cambiada correctamente",
+            content = @Content(mediaType = "text/plain")),
+        @ApiResponse(responseCode = "400", description = "Datos inválidos o contraseña actual incorrecta",
+            content = @Content(mediaType = "text/plain")),
+        @ApiResponse(responseCode = "404", description = "Usuario no encontrado",
+            content = @Content(mediaType = "text/plain")),
+        @ApiResponse(responseCode = "500", description = "Error interno del servidor",
+            content = @Content(mediaType = "text/plain"))
+    })
     @PostMapping("/change-password")
     public ResponseEntity<?> changePassword(
             @RequestBody ChangePasswordRequestDTO request,
             @RequestHeader("Authorization") String authHeader) {
         try {
-            // Extraer username del token
-            String token = authHeader.substring(7); // Remover "Bearer "
+            String token = authHeader.substring(7);
             String username = jwtUtil.extractUsername(token);
 
-            // Buscar usuario
             Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(username);
 
             if (!usuarioOpt.isPresent()) {
@@ -137,17 +189,14 @@ public class AuthController {
 
             Usuario usuario = usuarioOpt.get();
 
-            // Verificar que la contraseña actual sea correcta
             if (!passwordEncoder.matches(request.getCurrentPassword(), usuario.getContrasenaHash())) {
                 return ResponseEntity.badRequest().body("La contraseña actual es incorrecta");
             }
 
-            // Validar nueva contraseña
             if (request.getNewPassword() == null || request.getNewPassword().length() < 6) {
                 return ResponseEntity.badRequest().body("La nueva contraseña debe tener al menos 6 caracteres");
             }
 
-            // Cambiar contraseña
             usuario.setContrasenaHash(passwordEncoder.encode(request.getNewPassword()));
             usuarioRepository.save(usuario);
 

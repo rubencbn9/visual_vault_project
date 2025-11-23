@@ -29,4 +29,8 @@ public interface VideoRepository extends JpaRepository<Video ,Long>{
     
     // Buscar videos por título que contenga un texto (búsqueda)
     List<Video> findByUsuarioAndTituloContainingIgnoreCase(Usuario usuario, String titulo);
+
+    List<Video> findByVistoTrue();
+    List<Video> findByVistoFalse();
+    
 }

@@ -6,6 +6,7 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -40,7 +41,7 @@ public class Video {
     private String miniaturaUrl;
     private String fuente;
     private String estado;
-     private Boolean visto = false;
+    private Boolean visto = false; 
     // private String categoria;
     private LocalDateTime fechaGuardado = LocalDateTime.now();
 
