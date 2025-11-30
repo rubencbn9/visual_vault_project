@@ -73,11 +73,9 @@ public class VideoController {
     // -------------------------------------------------------------
     @Operation(summary = "Obtener todos los videos del usuario")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Lista de videos devuelta correctamente",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = Video.class))),
-        @ApiResponse(responseCode = "401", description = "No autorizado", content = @Content),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
+            @ApiResponse(responseCode = "200", description = "Lista de videos devuelta correctamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Video.class))),
+            @ApiResponse(responseCode = "401", description = "No autorizado", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
     })
     @GetMapping("/list")
     public ResponseEntity<List<Video>> getVideos(Authentication auth) {
@@ -95,12 +93,10 @@ public class VideoController {
     // -------------------------------------------------------------
     @Operation(summary = "Obtener un video por su ID")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Video encontrado",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = Video.class))),
-        @ApiResponse(responseCode = "403", description = "No tienes permiso para acceder a este video", content = @Content),
-        @ApiResponse(responseCode = "404", description = "Video no encontrado", content = @Content),
-        @ApiResponse(responseCode = "401", description = "No autorizado", content = @Content)
+            @ApiResponse(responseCode = "200", description = "Video encontrado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Video.class))),
+            @ApiResponse(responseCode = "403", description = "No tienes permiso para acceder a este video", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Video no encontrado", content = @Content),
+            @ApiResponse(responseCode = "401", description = "No autorizado", content = @Content)
     })
     @GetMapping("/{id}")
     public ResponseEntity<Video> getVideo(@PathVariable Long id, Authentication auth) {
@@ -126,11 +122,9 @@ public class VideoController {
     // -------------------------------------------------------------
     @Operation(summary = "Crear un nuevo video")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Video creado correctamente",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = Video.class))),
-        @ApiResponse(responseCode = "400", description = "Datos inválidos", content = @Content),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
+            @ApiResponse(responseCode = "200", description = "Video creado correctamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Video.class))),
+            @ApiResponse(responseCode = "400", description = "Datos inválidos", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
     })
     @PostMapping("/send")
     public ResponseEntity<?> createVideo(@RequestBody VideoCreateDTO videoDTO, Authentication auth) {
@@ -160,12 +154,10 @@ public class VideoController {
     // -------------------------------------------------------------
     @Operation(summary = "Actualizar un video existente")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Video actualizado",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = Video.class))),
-        @ApiResponse(responseCode = "403", description = "No tienes permiso para actualizar este video", content = @Content),
-        @ApiResponse(responseCode = "404", description = "Video no encontrado", content = @Content),
-        @ApiResponse(responseCode = "401", description = "No autorizado", content = @Content)
+            @ApiResponse(responseCode = "200", description = "Video actualizado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Video.class))),
+            @ApiResponse(responseCode = "403", description = "No tienes permiso para actualizar este video", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Video no encontrado", content = @Content),
+            @ApiResponse(responseCode = "401", description = "No autorizado", content = @Content)
     })
     @PutMapping("/{id}")
     public ResponseEntity<Video> updateVideo(@PathVariable Long id,
@@ -202,10 +194,10 @@ public class VideoController {
     // -------------------------------------------------------------
     @Operation(summary = "Eliminar un video por su ID")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Video eliminado correctamente"),
-        @ApiResponse(responseCode = "403", description = "No tienes permiso para eliminar este video", content = @Content),
-        @ApiResponse(responseCode = "404", description = "Video no encontrado", content = @Content),
-        @ApiResponse(responseCode = "401", description = "No autorizado", content = @Content)
+            @ApiResponse(responseCode = "200", description = "Video eliminado correctamente"),
+            @ApiResponse(responseCode = "403", description = "No tienes permiso para eliminar este video", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Video no encontrado", content = @Content),
+            @ApiResponse(responseCode = "401", description = "No autorizado", content = @Content)
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteVideo(@PathVariable Long id, Authentication auth) {
@@ -228,99 +220,72 @@ public class VideoController {
     }
 
     // -------------------------------------------------------------
-    // TOGGLE VISTO
-    // -------------------------------------------------------------
-    @Operation(summary = "Marcar o desmarcar un video como visto")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Estado actualizado",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = Video.class))),
-        @ApiResponse(responseCode = "403", description = "No tienes permiso para modificar este video"),
-        @ApiResponse(responseCode = "404", description = "Video no encontrado"),
-        @ApiResponse(responseCode = "401", description = "No autorizado")
-    })
-    @PatchMapping("/{id}/visto")
-    public ResponseEntity<Video> toggleVisto(@PathVariable Long id, Authentication auth) {
-        try {
-            Usuario usuario = getCurrentUser(auth);
-            Video video = videoRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Video no encontrado"));
-
-            if (!video.getUsuario().getIdUsuario().equals(usuario.getIdUsuario())) {
-                return ResponseEntity.status(403).build();
-            }
-
-            video.setVisto(!video.getVisto());
-            Video updatedVideo = videoRepository.save(video);
-            return ResponseEntity.ok(updatedVideo);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        } catch (Exception e) {
-            return ResponseEntity.status(401).build();
-        }
-    }
-
-    // -------------------------------------------------------------
-    // MARCAR COMO NO VISTO
-    // -------------------------------------------------------------
-    @Operation(summary = "Marcar un video como no visto")
-    @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Estado actualizado",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = Video.class))),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
-    })
-    @PatchMapping("/{id}/marcar-no-visto")
-    public ResponseEntity<?> marcarComoNoVisto(
-            @PathVariable Long id,
-            @RequestHeader("Authorization") String authHeader) {
-        try {
-
-            String token = authHeader.substring(7);
-            String username = jwtUtil.extractUsername(token);
-
-            Video video = videoRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Video no encontrado"));
-
-            video.setVisto(false);
-            videoRepository.save(video);
-
-            return ResponseEntity.ok(video);
-
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error: " + e.getMessage());
-        }
-    }
-
-    // -------------------------------------------------------------
     // TOGGLE VISTO (POR TOKEN)
     // -------------------------------------------------------------
     @Operation(summary = "Alternar el estado visto/no visto de un video")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Estado actualizado"),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+            @ApiResponse(responseCode = "200", description = "Estado actualizado"),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
     })
+    // TOGGLE VISTO - VERSIÓN CORREGIDA
     @PatchMapping("/{id}/toggle-visto")
     public ResponseEntity<?> toggleVisto(
             @PathVariable Long id,
-            @RequestHeader("Authorization") String authHeader) {
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            Authentication auth) {
         try {
+            // Opción 1: Usar Authentication (preferido)
+            if (auth != null) {
+                Usuario usuario = getCurrentUser(auth);
 
-            String token = authHeader.substring(7);
-            String username = jwtUtil.extractUsername(token);
+                Video video = videoRepository.findById(id)
+                        .orElseThrow(() -> new RuntimeException("Video no encontrado"));
 
-            Video video = videoRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Video no encontrado"));
+                // Verificar que el video pertenece al usuario
+                if (!video.getUsuario().getIdUsuario().equals(usuario.getIdUsuario())) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .body("No tienes permiso para modificar este video");
+                }
 
-            video.setVisto(!video.getVisto());
-            videoRepository.save(video);
+                video.setVisto(!video.getVisto());
+                Video updatedVideo = videoRepository.save(video);
+                return ResponseEntity.ok(updatedVideo);
+            }
 
-            return ResponseEntity.ok(video);
+            // Opción 2: Usar token directamente (fallback)
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                String token = authHeader.substring(7);
+                String username = jwtUtil.extractUsername(token);
 
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                Usuario usuario = usuarioRepository.findByUsername(username)
+                        .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+                Video video = videoRepository.findById(id)
+                        .orElseThrow(() -> new RuntimeException("Video no encontrado"));
+
+                // Verificar que el video pertenece al usuario
+                if (!video.getUsuario().getIdUsuario().equals(usuario.getIdUsuario())) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .body("No tienes permiso para modificar este video");
+                }
+
+                video.setVisto(!video.getVisto());
+                Video updatedVideo = videoRepository.save(video);
+                return ResponseEntity.ok(updatedVideo);
+            }
+
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No autorizado");
+
+        } catch (RuntimeException e) {
+            System.err.println("Error en toggle-visto: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Error: " + e.getMessage());
+        } catch (Exception e) {
+            System.err.println("Error interno en toggle-visto: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error interno: " + e.getMessage());
         }
     }
 
@@ -329,10 +294,8 @@ public class VideoController {
     // -------------------------------------------------------------
     @Operation(summary = "Obtener todos los videos marcados como vistos")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Lista de videos devuelta",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = Video.class))),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+            @ApiResponse(responseCode = "200", description = "Lista de videos devuelta", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Video.class))),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
     })
     @GetMapping("/vistos")
     public ResponseEntity<List<Video>> getVideosVistos(
@@ -353,15 +316,58 @@ public class VideoController {
         }
     }
 
+    // MARCAR COMO VISTO - CORREGIDO
+    // MARCAR COMO VISTO - CORREGIDO
+    @PatchMapping("/{id}/marcar-visto")
+    public ResponseEntity<?> marcarComoVisto(
+            @PathVariable Long id,
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            Authentication auth) {
+        try {
+            Video video = videoRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Video no encontrado"));
+
+            video.setVisto(true);
+            Video updatedVideo = videoRepository.save(video);
+            return ResponseEntity.ok(updatedVideo);
+
+        } catch (Exception e) {
+            System.err.println("Error en marcar-visto: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error: " + e.getMessage());
+        }
+    }
+
+    // MARCAR COMO NO VISTO - CORREGIDO
+    @PatchMapping("/{id}/marcar-no-visto")
+    public ResponseEntity<?> marcarComoNoVisto(
+            @PathVariable Long id,
+            @RequestHeader(value = "Authorization", required = false) String authHeader,
+            Authentication auth) {
+        try {
+            Video video = videoRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Video no encontrado"));
+
+            video.setVisto(false);
+            Video updatedVideo = videoRepository.save(video);
+            return ResponseEntity.ok(updatedVideo);
+
+        } catch (Exception e) {
+            System.err.println("Error en marcar-no-visto: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error: " + e.getMessage());
+        }
+    }
+
     // -------------------------------------------------------------
     // LISTA DE VIDEOS NO VISTOS
     // -------------------------------------------------------------
     @Operation(summary = "Obtener todos los videos no vistos")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Lista devuelta correctamente",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = Video.class))),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor")
+            @ApiResponse(responseCode = "200", description = "Lista devuelta correctamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Video.class))),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor")
     })
     @GetMapping("/no-vistos")
     public ResponseEntity<List<Video>> getVideosNoVistos(

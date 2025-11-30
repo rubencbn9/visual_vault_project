@@ -1,4 +1,4 @@
-package com.visualvault.visual_vault_project.entity;
+package com.visualvault.visual_vault_project.configuration;
 
 import java.util.List;
 
@@ -12,8 +12,7 @@ import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.servers.Server;
 
 @Configuration
-public class OpenApiConfig {
-
+public class openApiConfig {
     @Bean
     public OpenAPI myOpenAPI() {
         Server prodServer = new Server();
@@ -30,9 +29,10 @@ public class OpenApiConfig {
                 .title("Ejemplo de documentación API")
                 .version("1.0")
                 .contact(contact)
-                .description("Esta API es un ejemplo del uso de Swagger")
+                .description("API proyecto VisualVault")
                 .termsOfService("https://www.fernandowirtz.com/terms")
                 .license(mitLicense);
         return new OpenAPI().info(info).servers(List.of(prodServer));
     }
+
 }
