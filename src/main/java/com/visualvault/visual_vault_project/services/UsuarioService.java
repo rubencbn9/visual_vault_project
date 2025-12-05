@@ -18,12 +18,12 @@ public interface UsuarioService {
 
      Usuario obtenerPorId(Long id);
 
-
      void updateUsuario(Usuario usuario);
 
      Usuario getUsuarioByNombre(String nombre);
 
      boolean borrarPorUsername(String username);
-     
+
+     Usuario updateProfilePicture(Long userId, String filename);
 
 }

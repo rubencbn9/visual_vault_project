@@ -77,15 +77,22 @@ public class UsuarioServiceImplement implements UsuarioService {
     }
 
     public Usuario getUsuarioByNombre(String nombre) {
-        return usuarioRepository.findByUsername(nombre).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        return usuarioRepository.findByUsername(nombre)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
 
-
     public boolean borrarPorUsername(String username) {
-    Usuario usuario = usuarioRepository.findByUsername(username)
-        .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-    usuarioRepository.delete(usuario);
-    return true;
-}
+        Usuario usuario = usuarioRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        usuarioRepository.delete(usuario);
+        return true;
+    }
+
+    public Usuario updateProfilePicture(Long userId, String filename) {
+        Usuario usuario = usuarioRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        usuario.setProfilePicture(filename);
+        return usuarioRepository.save(usuario);
+    }
 
 }

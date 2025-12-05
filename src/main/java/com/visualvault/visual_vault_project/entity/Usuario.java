@@ -25,21 +25,23 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class Usuario {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    
+
     private Long idUsuario;
     private String username;
 
     @Column(unique = true, nullable = false)
     private String email;
-    
+
     private String contrasenaHash;
 
     private LocalDateTime fechaRegistro = LocalDateTime.now();
 
-     // Relación con videos
+    private String profilePicture; // Stores the filename in uploadDir
+
+    // Relación con videos
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Video> videos;

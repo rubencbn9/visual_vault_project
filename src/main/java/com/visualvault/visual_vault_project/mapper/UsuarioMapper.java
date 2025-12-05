@@ -9,7 +9,7 @@ import com.visualvault.visual_vault_project.entity.Usuario;
 
 public class UsuarioMapper {
 
-    //podría hacerse con estructura lombock
+    // podría hacerse con estructura lombock
 
     public static Usuario toEntity(UsuarioCreateDTO dto) {
         Usuario usuario = new Usuario();
@@ -22,11 +22,11 @@ public class UsuarioMapper {
         return usuario;
     }
 
-    public static UsuarioResponseDTO toDTO(Usuario usuario){
+    public static UsuarioResponseDTO toDTO(Usuario usuario) {
         return new UsuarioResponseDTO(
-            usuario.getIdUsuario(),
-            usuario.getUsername(),
-            usuario.getEmail()
-        );
+                usuario.getIdUsuario(),
+                usuario.getUsername(),
+                usuario.getEmail(),
+                usuario.getProfilePicture());
     }
 }
