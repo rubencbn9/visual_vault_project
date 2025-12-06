@@ -5,6 +5,7 @@ import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -18,6 +19,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     @Autowired
@@ -26,24 +28,29 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin())) // Oculta
-                                                                                                     // frameOptions con
-                                                                                                     // sameOrigin
+                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()))
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
+                        // Endpoints públicos
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/favicon.ico").permitAll()
                         .requestMatchers("/api/videos/**").permitAll()
-                        .requestMatchers("/swagger-ui/**").permitAll()
-                        .requestMatchers("/v3/api-docs/**").permitAll()
-                        .requestMatchers("/v3/api-docs").permitAll()
-                        .requestMatchers("/swagger-ui.html").permitAll()
-                        .requestMatchers("/swagger-ui/**").permitAll()
-                        .requestMatchers("/api-docs/**").permitAll()
                         .requestMatchers("/api/usuarios/*/profile-picture").permitAll()
                         .requestMatchers("/uploads/**").permitAll()
+
+                        // Swagger solo para ADMINISTRADOR
+                        .requestMatchers("/swagger-ui/**").hasRole("ADMINISTRADOR")
+                        .requestMatchers("/swagger-ui.html").hasRole("ADMINISTRADOR")
+                        .requestMatchers("/v3/api-docs/**").hasRole("ADMINISTRADOR")
+                        .requestMatchers("/v3/api-docs").hasRole("ADMINISTRADOR")
+                        .requestMatchers("/api-docs/**").hasRole("ADMINISTRADOR")
+
+                        // Admin endpoints solo para ADMINISTRADOR
+                        .requestMatchers("/api/admin/**").hasRole("ADMINISTRADOR")
+
+                        // Todo lo demás requiere autenticación
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
