@@ -2,7 +2,6 @@ package com.visualvault.visual_vault_project.controllers;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.visualvault.visual_vault_project.dto.AuthResponseDTO;
 import com.visualvault.visual_vault_project.dto.ChangePasswordRequestDTO;
 import com.visualvault.visual_vault_project.dto.LoginRequestDTO;
@@ -22,7 +20,6 @@ import com.visualvault.visual_vault_project.entity.JwtUtil;
 import com.visualvault.visual_vault_project.entity.Rol;
 import com.visualvault.visual_vault_project.entity.Usuario;
 import com.visualvault.visual_vault_project.repository.UsuarioRepository;
-
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -33,13 +30,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @RequestMapping("/api/auth")
 @CrossOrigin(origins = { "http://localhost:5500", "http://127.0.0.1:5500" })
 public class AuthController {
-
     @Autowired
     private UsuarioRepository usuarioRepository;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
-
     @Autowired
     private JwtUtil jwtUtil;
 
@@ -54,13 +48,16 @@ public class AuthController {
     })
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequestDTO request) {
+
         try {
             Optional<Usuario> existingUser = usuarioRepository.findByUsername(request.getUsername());
+
             if (existingUser.isPresent()) {
                 return ResponseEntity.badRequest().body("El usuario ya existe");
             }
 
             Optional<Usuario> existingEmail = usuarioRepository.findByEmail(request.getEmail());
+
             if (existingEmail.isPresent()) {
                 return ResponseEntity.badRequest().body("El email ya está registrado");
             }
@@ -78,9 +75,11 @@ public class AuthController {
             String token = jwtUtil.generateToken(savedUsuario.getUsername(), savedUsuario.getRol().name());
 
             return ResponseEntity
+
                     .ok(new AuthResponseDTO(token, savedUsuario.getUsername(), savedUsuario.getRol().name()));
 
         } catch (Exception e) {
+
             return ResponseEntity.status(500).body("Error al registrar usuario: " + e.getMessage());
         }
     }
@@ -96,7 +95,9 @@ public class AuthController {
     })
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO request) {
+
         try {
+
             Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(request.getUsername());
 
             if (!usuarioOpt.isPresent()) {
@@ -104,13 +105,11 @@ public class AuthController {
             }
 
             Usuario usuario = usuarioOpt.get();
-
             if (!passwordEncoder.matches(request.getPassword(), usuario.getContrasenaHash())) {
                 return ResponseEntity.badRequest().body("Contraseña incorrecta");
             }
 
             String token = jwtUtil.generateToken(usuario.getUsername(), usuario.getRol().name());
-
             return ResponseEntity.ok(new AuthResponseDTO(token, usuario.getUsername(), usuario.getRol().name()));
 
         } catch (Exception e) {
@@ -129,19 +128,19 @@ public class AuthController {
     })
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(@RequestHeader("Authorization") String authHeader) {
+
         try {
             String token = authHeader.substring(7);
             String username = jwtUtil.extractUsername(token);
-
             Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(username);
 
             if (!usuarioOpt.isPresent()) {
                 return ResponseEntity.status(404).body("Usuario no encontrado");
             }
-
             return ResponseEntity.ok(usuarioOpt.get());
 
         } catch (Exception e) {
+
             return ResponseEntity.status(401).body("Token inválido: " + e.getMessage());
         }
     }
@@ -160,10 +159,10 @@ public class AuthController {
     public ResponseEntity<?> changePassword(
             @RequestBody ChangePasswordRequestDTO request,
             @RequestHeader("Authorization") String authHeader) {
+
         try {
             String token = authHeader.substring(7);
             String username = jwtUtil.extractUsername(token);
-
             Optional<Usuario> usuarioOpt = usuarioRepository.findByUsername(username);
 
             if (!usuarioOpt.isPresent()) {
@@ -181,8 +180,8 @@ public class AuthController {
             }
 
             usuario.setContrasenaHash(passwordEncoder.encode(request.getNewPassword()));
-            usuarioRepository.save(usuario);
 
+            usuarioRepository.save(usuario);
             return ResponseEntity.ok("Contraseña cambiada correctamente");
 
         } catch (Exception e) {
