@@ -3,6 +3,7 @@ package com.visualvault.visual_vault_project.entity;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
@@ -32,7 +33,7 @@ public class Video {
 
     @ManyToOne
     @JoinColumn(name = "id_usuario", nullable = false)
-    @JsonIgnore
+    @JsonBackReference
     private Usuario usuario;
 
     private String url;
@@ -41,7 +42,7 @@ public class Video {
     private String miniaturaUrl;
     private String fuente;
     private String estado;
-    private Boolean visto = false; 
+    private Boolean visto = false;
     // private String categoria;
     private LocalDateTime fechaGuardado = LocalDateTime.now();
 

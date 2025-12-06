@@ -4,10 +4,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -41,9 +44,13 @@ public class Usuario {
 
     private String profilePicture;
 
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private Rol rol = Rol.USUARIO;
+
     // Relación con videos
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-    @JsonIgnore
+    @JsonManagedReferencey
     private List<Video> videos;
 
     // Relación con listas

@@ -19,6 +19,7 @@ import com.visualvault.visual_vault_project.dto.ChangePasswordRequestDTO;
 import com.visualvault.visual_vault_project.dto.LoginRequestDTO;
 import com.visualvault.visual_vault_project.dto.RegisterRequestDTO;
 import com.visualvault.visual_vault_project.entity.JwtUtil;
+import com.visualvault.visual_vault_project.entity.Rol;
 import com.visualvault.visual_vault_project.entity.Usuario;
 import com.visualvault.visual_vault_project.repository.UsuarioRepository;
 
@@ -45,16 +46,11 @@ public class AuthController {
     // ----------------------------------------------------
     // REGISTRO
     // ----------------------------------------------------
-    @Operation(summary = "Registrar nuevo usuario",
-               description = "Crea un nuevo usuario verificando que username y email no existan previamente")
+    @Operation(summary = "Registrar nuevo usuario", description = "Crea un nuevo usuario verificando que username y email no existan previamente")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Usuario registrado correctamente",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = AuthResponseDTO.class))),
-        @ApiResponse(responseCode = "400", description = "Datos inválidos o usuario ya existente", 
-            content = @Content(mediaType = "text/plain")),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor", 
-            content = @Content(mediaType = "text/plain"))
+            @ApiResponse(responseCode = "200", description = "Usuario registrado correctamente", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthResponseDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Datos inválidos o usuario ya existente", content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content(mediaType = "text/plain"))
     })
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequestDTO request) {
@@ -74,13 +70,15 @@ public class AuthController {
                     .email(request.getEmail())
                     .contrasenaHash(passwordEncoder.encode(request.getPassword()))
                     .fechaRegistro(LocalDateTime.now())
+                    .rol(Rol.USUARIO)
                     .build();
 
             Usuario savedUsuario = usuarioRepository.save(usuario);
 
-            String token = jwtUtil.generateToken(savedUsuario.getUsername());
+            String token = jwtUtil.generateToken(savedUsuario.getUsername(), savedUsuario.getRol().name());
 
-            return ResponseEntity.ok(new AuthResponseDTO(token, savedUsuario.getUsername()));
+            return ResponseEntity
+                    .ok(new AuthResponseDTO(token, savedUsuario.getUsername(), savedUsuario.getRol().name()));
 
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error al registrar usuario: " + e.getMessage());
@@ -90,16 +88,11 @@ public class AuthController {
     // ----------------------------------------------------
     // LOGIN
     // ----------------------------------------------------
-    @Operation(summary = "Iniciar sesión",
-               description = "Valida las credenciales del usuario y devuelve un token JWT")
+    @Operation(summary = "Iniciar sesión", description = "Valida las credenciales del usuario y devuelve un token JWT")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Inicio de sesión exitoso",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = AuthResponseDTO.class))),
-        @ApiResponse(responseCode = "400", description = "Credenciales incorrectas",
-            content = @Content(mediaType = "text/plain")),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor",
-            content = @Content(mediaType = "text/plain"))
+            @ApiResponse(responseCode = "200", description = "Inicio de sesión exitoso", content = @Content(mediaType = "application/json", schema = @Schema(implementation = AuthResponseDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Credenciales incorrectas", content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content(mediaType = "text/plain"))
     })
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestDTO request) {
@@ -116,9 +109,9 @@ public class AuthController {
                 return ResponseEntity.badRequest().body("Contraseña incorrecta");
             }
 
-            String token = jwtUtil.generateToken(usuario.getUsername());
+            String token = jwtUtil.generateToken(usuario.getUsername(), usuario.getRol().name());
 
-            return ResponseEntity.ok(new AuthResponseDTO(token, usuario.getUsername()));
+            return ResponseEntity.ok(new AuthResponseDTO(token, usuario.getUsername(), usuario.getRol().name()));
 
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error al iniciar sesión: " + e.getMessage());
@@ -128,16 +121,11 @@ public class AuthController {
     // ----------------------------------------------------
     // DATOS DEL USUARIO LOGUEADO
     // ----------------------------------------------------
-    @Operation(summary = "Obtener usuario logueado",
-               description = "Devuelve la información del usuario asociada al token enviado")
+    @Operation(summary = "Obtener usuario logueado", description = "Devuelve la información del usuario asociada al token enviado")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Usuario encontrado",
-            content = @Content(mediaType = "application/json",
-            schema = @Schema(implementation = Usuario.class))),
-        @ApiResponse(responseCode = "401", description = "Token inválido o expirado",
-            content = @Content(mediaType = "text/plain")),
-        @ApiResponse(responseCode = "404", description = "Usuario no encontrado",
-            content = @Content(mediaType = "text/plain"))
+            @ApiResponse(responseCode = "200", description = "Usuario encontrado", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Usuario.class))),
+            @ApiResponse(responseCode = "401", description = "Token inválido o expirado", content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "404", description = "Usuario no encontrado", content = @Content(mediaType = "text/plain"))
     })
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser(@RequestHeader("Authorization") String authHeader) {
@@ -161,17 +149,12 @@ public class AuthController {
     // ----------------------------------------------------
     // CAMBIAR CONTRASEÑA
     // ----------------------------------------------------
-    @Operation(summary = "Cambiar contraseña",
-               description = "Permite al usuario cambiar su contraseña verificando la actual")
+    @Operation(summary = "Cambiar contraseña", description = "Permite al usuario cambiar su contraseña verificando la actual")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Contraseña cambiada correctamente",
-            content = @Content(mediaType = "text/plain")),
-        @ApiResponse(responseCode = "400", description = "Datos inválidos o contraseña actual incorrecta",
-            content = @Content(mediaType = "text/plain")),
-        @ApiResponse(responseCode = "404", description = "Usuario no encontrado",
-            content = @Content(mediaType = "text/plain")),
-        @ApiResponse(responseCode = "500", description = "Error interno del servidor",
-            content = @Content(mediaType = "text/plain"))
+            @ApiResponse(responseCode = "200", description = "Contraseña cambiada correctamente", content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "400", description = "Datos inválidos o contraseña actual incorrecta", content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "404", description = "Usuario no encontrado", content = @Content(mediaType = "text/plain")),
+            @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content(mediaType = "text/plain"))
     })
     @PostMapping("/change-password")
     public ResponseEntity<?> changePassword(
