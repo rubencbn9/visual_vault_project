@@ -38,32 +38,31 @@ public class ThumbnailService {
     }
 
     /**
- * Extrae el ID de un video de Dailymotion y devuelve su miniatura
- */
-public String extractDailymotionThumbnail(String videoUrl) {
-    if (videoUrl == null || videoUrl.isEmpty()) {
-        return null;
+     * Extrae el ID de un video de Dailymotion y devuelve su miniatura
+     */
+    public String extractDailymotionThumbnail(String videoUrl) {
+        if (videoUrl == null || videoUrl.isEmpty()) {
+            return null;
+        }
+
+        String videoId = null;
+
+        // Formato: https://www.dailymotion.com/video/x7y8z9
+        if (videoUrl.contains("dailymotion.com/video/")) {
+            videoId = videoUrl.split("dailymotion.com/video/")[1].split("[/?#]")[0];
+        }
+        // Formato corto: https://dai.ly/x7y8z9
+        else if (videoUrl.contains("dai.ly/")) {
+            videoId = videoUrl.split("dai.ly/")[1].split("[/?#]")[0];
+        }
+
+        if (videoId == null || videoId.isEmpty()) {
+            return null;
+        }
+
+        // URL directa de la miniatura
+        return "https://www.dailymotion.com/thumbnail/video/" + videoId;
     }
-
-    String videoId = null;
-
-    // Formato: https://www.dailymotion.com/video/x7y8z9
-    if (videoUrl.contains("dailymotion.com/video/")) {
-        videoId = videoUrl.split("dailymotion.com/video/")[1].split("[/?#]")[0];
-    }
-    // Formato corto: https://dai.ly/x7y8z9
-    else if (videoUrl.contains("dai.ly/")) {
-        videoId = videoUrl.split("dai.ly/")[1].split("[/?#]")[0];
-    }
-
-    if (videoId == null || videoId.isEmpty()) {
-        return null;
-    }
-
-    // URL directa de la miniatura
-    return "https://www.dailymotion.com/thumbnail/video/" + videoId;
-}
-
 
     /**
      * Extrae miniatura según la plataforma
@@ -85,6 +84,9 @@ public String extractDailymotionThumbnail(String videoUrl) {
 
             case "tiktok":
                 return extractTikTokThumbnail(videoUrl);
+
+            case "dailymotion":
+                return extractDailymotionThumbnail(videoUrl);
 
             default:
                 return null;
@@ -119,18 +121,18 @@ public String extractDailymotionThumbnail(String videoUrl) {
     }
 
     /**
-     * Para Vimeo (requiere API, aquí devolvemos null)
+     * Para Vimeo - devuelve imagen genérica con logo de Vimeo
      */
     private String extractVimeoThumbnail(String url) {
-        // Implementación básica - aquí irá la API de Vimeo
-        return null;
+        // Imagen genérica con logo de Vimeo (usando un placeholder público)
+        return "https://i.ibb.co/k2t4WPcX/vimeo.jpg";
     }
 
     /**
-     * Para TikTok (requiere scraping, aquí devolvemos null)
+     * Para TikTok - devuelve imagen genérica con logo de TikTok
      */
     private String extractTikTokThumbnail(String url) {
-        // Implementación básica - TikTok no facilita acceso directo
-        return null;
+        // Imagen genérica con logo de TikTok (usando logo oficial)
+        return "https://i.ibb.co/vCSykZMm/tiktok-1.png";
     }
 }

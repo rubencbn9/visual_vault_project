@@ -39,7 +39,7 @@ public class Usuario {
 
     private LocalDateTime fechaRegistro = LocalDateTime.now();
 
-    private String profilePicture; // Stores the filename in uploadDir
+    private String profilePicture;
 
     // Relación con videos
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
