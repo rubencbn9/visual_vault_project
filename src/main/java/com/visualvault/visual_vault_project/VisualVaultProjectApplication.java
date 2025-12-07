@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.visualvault.visual_vault_project.entity.Categoria;
+import com.visualvault.visual_vault_project.entity.Rol;
 import com.visualvault.visual_vault_project.entity.Usuario;
 import com.visualvault.visual_vault_project.entity.Video;
 import com.visualvault.visual_vault_project.repository.UsuarioRepository;
@@ -30,11 +31,21 @@ public class VisualVaultProjectApplication {
     CommandLineRunner initDatabase(UsuarioRepository usuarioRepository, VideoRepository videoRepository,
             CategoriaService categoriaService) {
         return args -> {
-            // Crear usuario
+            // Crear usuario ADMINISTRADOR por defecto
+            Usuario admin = Usuario.builder()
+                    .username("admin")
+                    .email("admin@visualvault.com")
+                    .contrasenaHash(passwordEncoder.encode("admin123"))
+                    .rol(Rol.ADMINISTRADOR)
+                    .build();
+            usuarioRepository.save(admin);
+
+            // Crear usuario regular
             Usuario usuario1 = Usuario.builder()
                     .username("Ruben")
                     .email("ruben@example.com")
                     .contrasenaHash(passwordEncoder.encode("12345678"))
+                    .rol(Rol.USUARIO)
                     .build();
             usuarioRepository.save(usuario1);
 
@@ -42,6 +53,7 @@ public class VisualVaultProjectApplication {
                     .username("Lucia")
                     .email("lucia@example.com")
                     .contrasenaHash(passwordEncoder.encode("12345678"))
+                    .rol(Rol.USUARIO)
                     .build();
             usuarioRepository.save(usuario2);
 

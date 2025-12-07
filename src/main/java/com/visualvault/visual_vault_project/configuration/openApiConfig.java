@@ -20,7 +20,7 @@ public class openApiConfig {
         prodServer.setDescription("Server URL in Production environment");
 
         Contact contact = new Contact();
-        contact.setEmail("ruben.barreiro.7@gmail.com");
+        contact.setEmail("ruben.correoinventado@gmail.com");
         contact.setName("Rubén Calviño");
         contact.setUrl("https://www.fernandowirtz.com");
 

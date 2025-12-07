@@ -97,27 +97,8 @@ public class ThumbnailService {
      * Extrae la miniatura de un clip de Twitch
      */
     public String extractTwitchThumbnailUrl(String videoUrl) {
-        if (videoUrl == null || videoUrl.isEmpty()) {
-            return null;
-        }
-
-        String clipId = null;
-
-        // Ejemplo: https://clips.twitch.tv/NombreDelClip
-        if (videoUrl.contains("clips.twitch.tv/")) {
-            clipId = videoUrl.split("clips.twitch.tv/")[1].split("[/?#]")[0];
-        }
-        // Ejemplo: https://www.twitch.tv/usuario/clip/NombreDelClip
-        else if (videoUrl.contains("/clip/")) {
-            clipId = videoUrl.split("/clip/")[1].split("[/?#]")[0];
-        }
-
-        if (clipId == null || clipId.isEmpty()) {
-            return null;
-        }
-
         // Devuelve la URL de la miniatura del clip
-        return "https://clips-media-assets2.twitch.tv/" + clipId + "-preview-480x272.jpg";
+        return "https://i.ibb.co/WpRrsP4X/twitch-logo-1.png";
     }
 
     /**
