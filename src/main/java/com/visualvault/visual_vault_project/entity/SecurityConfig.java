@@ -34,18 +34,19 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Endpoints públicos
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/contacto/**").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/favicon.ico").permitAll()
                         .requestMatchers("/api/videos/**").permitAll()
                         .requestMatchers("/api/usuarios/*/profile-picture").permitAll()
                         .requestMatchers("/uploads/**").permitAll()
 
-                        // Swagger solo para ADMINISTRADOR
-                        .requestMatchers("/swagger-ui/**").hasRole("ADMINISTRADOR")
-                        .requestMatchers("/swagger-ui.html").hasRole("ADMINISTRADOR")
-                        .requestMatchers("/v3/api-docs/**").hasRole("ADMINISTRADOR")
-                        .requestMatchers("/v3/api-docs").hasRole("ADMINISTRADOR")
-                        .requestMatchers("/api-docs/**").hasRole("ADMINISTRADOR")
+                        // Swagger
+                        .requestMatchers("/swagger-ui/**").permitAll()
+                        .requestMatchers("/swagger-ui.html").permitAll()
+                        .requestMatchers("/v3/api-docs/**").permitAll()
+                        .requestMatchers("/v3/api-docs").permitAll()
+                        .requestMatchers("/api-docs/**").permitAll()
 
                         // Admin endpoints solo para ADMINISTRADOR
                         .requestMatchers("/api/admin/**").hasRole("ADMINISTRADOR")
