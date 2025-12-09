@@ -24,29 +24,38 @@ public class ListaController {
 
     @Autowired
     private ListaService listaService;
+    //------------------------------------------------------
+    // CREAR LISTA
+    //------------------------------------------------------
 
-    // Crear lista
     @PostMapping
     public ResponseEntity<Lista> crearLista(@Valid @RequestBody Lista lista) {
         Lista nuevaLista = listaService.crearLista(lista);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevaLista);
     }
 
-    //  Listar listas de un usuario
+    //------------------------------------------------------
+    //  LISTAS DE UN USUARIO
+    //------------------------------------------------------
+
     @GetMapping("/usuario/{usuarioId}")
     public ResponseEntity<List<Lista>> obtenerListasPorUsuario(@PathVariable Long usuarioId) {
         List<Lista> listas = listaService.findByUsuario_IdUsuario(usuarioId);
         return ResponseEntity.ok(listas);
     }
+    //------------------------------------------------------
+    //  AGREGAR VIDEO A LA LISTA
+    //------------------------------------------------------
 
-    //  Agregar video a lista
     @PostMapping("/{listaId}/videos/{videoId}")
     public ResponseEntity<Lista> agregarVideoALista(@PathVariable Long listaId, @PathVariable Long videoId) {
         Lista listaActualizada = listaService.agregarVideo(listaId, videoId);
         return ResponseEntity.ok(listaActualizada);
     }
 
-    //  Eliminar video de lista
+    //------------------------------------------------------
+    //  ELIMINAR VIDEO DE LA LISTA
+    //------------------------------------------------------
     @DeleteMapping("/{listaId}/videos/{videoId}")
     public ResponseEntity<Lista> eliminarVideoDeLista(@PathVariable Long listaId, @PathVariable Long videoId) {
         Lista listaActualizada = listaService.eliminarVideo(listaId, videoId);

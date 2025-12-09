@@ -5,13 +5,6 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
-// import jakarta.persistence.CascadeType;
-// import jakarta.persistence.Entity;
-// import jakarta.persistence.GeneratedValue;
-// import jakarta.persistence.GenerationType;
-// import jakarta.persistence.Id;
-// import jakarta.persistence.OneToMany;
-// import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,8 +24,6 @@ public class Categoria {
 
     private String nombre;
 
-    // @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
-    // private Set<VideoCategoria> video;
     
     @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
     @JsonIgnore

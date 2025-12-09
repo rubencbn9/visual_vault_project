@@ -5,9 +5,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class ThumbnailService {
 
-    /**
-     * Extrae el ID de un video de YouTube desde la URL
-     */
+    //------------------------------------------------------
+    // Extrae el ID de un video de YouTube desde la URL
+    //------------------------------------------------------
     public String extractYouTubeVideoId(String url) {
         String videoId = null;
 
@@ -23,9 +23,9 @@ public class ThumbnailService {
         return videoId;
     }
 
-    /**
-     * Genera la URL de la miniatura de YouTube
-     */
+    //------------------------------------------------------
+    // Genera la URL de la miniatura de YouTube
+    //------------------------------------------------------
     public String getYouTubeThumbnailUrl(String youtubeUrl) {
         String videoId = extractYouTubeVideoId(youtubeUrl);
 
@@ -37,9 +37,9 @@ public class ThumbnailService {
         return "https://img.youtube.com/vi/" + videoId + "/hqdefault.jpg";
     }
 
-    /**
-     * Extrae el ID de un video de Dailymotion y devuelve su miniatura
-     */
+     //------------------------------------------------------
+     // Extrae el ID de un video de Dailymotion y devuelve su miniatura
+     //------------------------------------------------------
     public String extractDailymotionThumbnail(String videoUrl) {
         if (videoUrl == null || videoUrl.isEmpty()) {
             return null;
@@ -47,11 +47,11 @@ public class ThumbnailService {
 
         String videoId = null;
 
-        // Formato: https://www.dailymotion.com/video/x7y8z9
+        // Formato: https://www.dailymotion.com/video/ID
         if (videoUrl.contains("dailymotion.com/video/")) {
             videoId = videoUrl.split("dailymotion.com/video/")[1].split("[/?#]")[0];
         }
-        // Formato corto: https://dai.ly/x7y8z9
+        // Formato corto: https://dai.ly/ID
         else if (videoUrl.contains("dai.ly/")) {
             videoId = videoUrl.split("dai.ly/")[1].split("[/?#]")[0];
         }
@@ -64,9 +64,9 @@ public class ThumbnailService {
         return "https://www.dailymotion.com/thumbnail/video/" + videoId;
     }
 
-    /**
-     * Extrae miniatura según la plataforma
-     */
+     //------------------------------------------------------
+     // Extrae miniatura segun la plataforma
+     //------------------------------------------------------
     public String extractThumbnailUrl(String videoUrl, String plataforma) {
         if (plataforma == null) {
             return null;
@@ -93,25 +93,25 @@ public class ThumbnailService {
         }
     }
 
-    /**
-     * Extrae la miniatura de un clip de Twitch
-     */
+    //------------------------------------------------------
+    // Para Twitch - devuelve imagen generica con logo de Twitch
+    //------------------------------------------------------
     public String extractTwitchThumbnailUrl(String videoUrl) {
         // Devuelve la URL de la miniatura del clip
         return "https://i.ibb.co/WpRrsP4X/twitch-logo-1.png";
     }
 
-    /**
-     * Para Vimeo - devuelve imagen genérica con logo de Vimeo
-     */
+    //------------------------------------------------------
+    // Para Vimeo - devuelve imagen generica con logo de Vimeo
+    //------------------------------------------------------
     private String extractVimeoThumbnail(String url) {
         // Imagen genérica con logo de Vimeo (usando un placeholder público)
         return "https://i.ibb.co/k2t4WPcX/vimeo.jpg";
     }
 
-    /**
-     * Para TikTok - devuelve imagen genérica con logo de TikTok
-     */
+    //------------------------------------------------------
+    // Para TikTok - devuelve imagen generica con logo de TikTok
+    //------------------------------------------------------
     private String extractTikTokThumbnail(String url) {
         // Imagen genérica con logo de TikTok (usando logo oficial)
         return "https://i.ibb.co/vCSykZMm/tiktok-1.png";

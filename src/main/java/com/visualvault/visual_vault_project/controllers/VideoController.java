@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.visualvault.visual_vault_project.dto.VideoCreateDTO;
-import com.visualvault.visual_vault_project.entity.JwtUtil;
+import com.visualvault.visual_vault_project.config_security.JwtUtil;
 import com.visualvault.visual_vault_project.entity.Usuario;
 import com.visualvault.visual_vault_project.entity.Video;
 import com.visualvault.visual_vault_project.mapper.VideoMapper;
@@ -234,7 +234,7 @@ public class VideoController {
             @RequestHeader(value = "Authorization", required = false) String authHeader,
             Authentication auth) {
         try {
-            // Opción 1: Usar Authentication (preferido)
+            // 1 Usar Authentication 
             if (auth != null) {
                 Usuario usuario = getCurrentUser(auth);
 
@@ -252,7 +252,7 @@ public class VideoController {
                 return ResponseEntity.ok(updatedVideo);
             }
 
-            // Opción 2: Usar token directamente (fallback)
+            //  2 Usar token directamente 
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 String token = authHeader.substring(7);
                 String username = jwtUtil.extractUsername(token);
@@ -316,8 +316,9 @@ public class VideoController {
         }
     }
 
-    // MARCAR COMO VISTO - CORREGIDO
-    // MARCAR COMO VISTO - CORREGIDO
+    //------------------------------------------------------
+    // MARCAR COMO VISTO 
+    //------------------------------------------------------
     @PatchMapping("/{id}/marcar-visto")
     public ResponseEntity<?> marcarComoVisto(
             @PathVariable Long id,
@@ -339,7 +340,10 @@ public class VideoController {
         }
     }
 
-    // MARCAR COMO NO VISTO - CORREGIDO
+    //------------------------------------------------------
+    // MARCAR COMO NO VISTO 
+    //------------------------------------------------------
+
     @PatchMapping("/{id}/marcar-no-visto")
     public ResponseEntity<?> marcarComoNoVisto(
             @PathVariable Long id,

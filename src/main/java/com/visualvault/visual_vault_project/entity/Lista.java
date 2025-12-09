@@ -22,6 +22,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+//------------------------------------------------------
+// NO ESTA EN USO
+//------------------------------------------------------
+
 public class Lista {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -14,6 +14,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+//------------------------------------------------------
+//NO ESTA EN USO
+//------------------------------------------------------
+
 @Entity
 @Table(name = "etiquetas")
 @Data

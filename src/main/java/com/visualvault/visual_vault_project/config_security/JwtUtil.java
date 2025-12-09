@@ -1,4 +1,4 @@
-package com.visualvault.visual_vault_project.entity;
+package com.visualvault.visual_vault_project.config_security;
 
 import org.springframework.stereotype.Component;
 

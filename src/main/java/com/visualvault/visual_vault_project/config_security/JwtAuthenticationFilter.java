@@ -1,4 +1,4 @@
-package com.visualvault.visual_vault_project.entity;
+package com.visualvault.visual_vault_project.config_security;
 
 import java.io.IOException;
 import java.util.List;
@@ -36,7 +36,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String username = jwtUtil.extractUsername(token);
                 String role = jwtUtil.extractRole(token);
 
-                // Create authority with ROLE_ prefix for Spring Security
+                // Crear autoridad con prefijo ROLE_ 
                 List<SimpleGrantedAuthority> authorities = List.of(
                         new SimpleGrantedAuthority("ROLE_" + role));
 

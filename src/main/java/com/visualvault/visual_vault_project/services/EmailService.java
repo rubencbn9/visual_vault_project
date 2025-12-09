@@ -19,8 +19,8 @@ public class EmailService {
     public void enviarMensajeContacto(ContactoDTO contacto) {
         SimpleMailMessage mensaje = new SimpleMailMessage();
         mensaje.setTo(contactEmail);
-        mensaje.setFrom(contactEmail); // Gmail requiere que sea tu email
-        mensaje.setReplyTo(contacto.email()); // Para que puedas responder directamente
+        mensaje.setFrom(contactEmail); 
+        mensaje.setReplyTo(contacto.email()); 
         mensaje.setSubject("Contacto VideoVault: " + contacto.asunto());
 
         String cuerpo = String.format(

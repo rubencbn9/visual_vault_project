@@ -18,6 +18,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+//------------------------------------------------------
+// NO ESTA EN USO
+//------------------------------------------------------
+
 public class VideoEtiqueta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

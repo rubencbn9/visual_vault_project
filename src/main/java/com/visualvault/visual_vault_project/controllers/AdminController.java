@@ -167,7 +167,10 @@ public class AdminController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    // DTO interno para crear usuario
+    //------------------------------------------------------
+    // DTO INTERNO PARA CRAR USUARIO
+    //------------------------------------------------------
+
     public static class CreateUserRequest {
         private String username;
         private String email;
@@ -207,7 +210,10 @@ public class AdminController {
         }
     }
 
-    // DTO interno para cambiar rol
+    //------------------------------------------------------
+    // DTO INTERNO PARA CAMBIAR ROL
+    //------------------------------------------------------
+
     public static class ChangeRoleRequest {
         private Rol rol;
 

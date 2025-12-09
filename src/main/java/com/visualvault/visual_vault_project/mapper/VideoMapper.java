@@ -35,7 +35,6 @@ public class VideoMapper {
                 "Categoría no encontrada: " + dto.categoria()));
     video.setCategoria(categoria);
 
-        // Convertir List<String> a Set<VideoEtiqueta> rebisar logica
         if (dto.etiquetas() != null) {
         Set<VideoEtiqueta> etiquetas = dto.etiquetas().stream()
                 .map(nombre -> {

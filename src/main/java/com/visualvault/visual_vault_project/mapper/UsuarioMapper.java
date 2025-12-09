@@ -9,7 +9,6 @@ import com.visualvault.visual_vault_project.entity.Usuario;
 
 public class UsuarioMapper {
 
-    // podría hacerse con estructura lombock
 
     public static Usuario toEntity(UsuarioCreateDTO dto) {
         Usuario usuario = new Usuario();
@@ -18,7 +17,7 @@ public class UsuarioMapper {
         usuario.setContrasenaHash(dto.contrasenaHash());
         usuario.setFechaRegistro(LocalDateTime.now());
         usuario.setVideos(List.of()); // inicializa vacío
-        usuario.setListas(List.of()); // inicializa vacío
+        usuario.setListas(List.of()); 
         return usuario;
     }
 

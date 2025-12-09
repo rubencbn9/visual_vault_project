@@ -16,7 +16,7 @@ import com.visualvault.visual_vault_project.dto.AuthResponseDTO;
 import com.visualvault.visual_vault_project.dto.ChangePasswordRequestDTO;
 import com.visualvault.visual_vault_project.dto.LoginRequestDTO;
 import com.visualvault.visual_vault_project.dto.RegisterRequestDTO;
-import com.visualvault.visual_vault_project.entity.JwtUtil;
+import com.visualvault.visual_vault_project.config_security.JwtUtil;
 import com.visualvault.visual_vault_project.entity.Rol;
 import com.visualvault.visual_vault_project.entity.Usuario;
 import com.visualvault.visual_vault_project.repository.UsuarioRepository;

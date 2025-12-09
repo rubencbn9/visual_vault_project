@@ -43,11 +43,8 @@ public class Video {
     private String fuente;
     private String estado;
     private Boolean visto = false;
-    // private String categoria;
     private LocalDateTime fechaGuardado = LocalDateTime.now();
 
-    // @OneToMany(mappedBy = "video", cascade = CascadeType.ALL)
-    // private Set<VideoCategoria> categorias;
 
     @ManyToOne
     @JoinColumn(name = "id_categoria", nullable = false)

@@ -20,79 +20,79 @@ import com.visualvault.visual_vault_project.services.CategoriaService;
 @SpringBootApplication
 public class VisualVaultProjectApplication {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+        @Autowired
+        private PasswordEncoder passwordEncoder;
 
-    public static void main(String[] args) {
-        SpringApplication.run(VisualVaultProjectApplication.class, args);
-    }
+        public static void main(String[] args) {
+                SpringApplication.run(VisualVaultProjectApplication.class, args);
+        }
 
-    @Bean
-    CommandLineRunner initDatabase(UsuarioRepository usuarioRepository, VideoRepository videoRepository,
-            CategoriaService categoriaService) {
-        return args -> {
-            // Crear usuario ADMINISTRADOR por defecto
-            Usuario admin = Usuario.builder()
-                    .username("admin")
-                    .email("admin@visualvault.com")
-                    .contrasenaHash(passwordEncoder.encode("admin123"))
-                    .rol(Rol.ADMINISTRADOR)
-                    .build();
-            usuarioRepository.save(admin);
+        @Bean
+        CommandLineRunner initDatabase(UsuarioRepository usuarioRepository, VideoRepository videoRepository,
+                        CategoriaService categoriaService) {
+                return args -> {
+                        // Crear usuario ADMINISTRADOR por defecto
+                        Usuario admin = Usuario.builder()
+                                        .username("admin")
+                                        .email("admin@visualvault.com")
+                                        .contrasenaHash(passwordEncoder.encode("admin123"))
+                                        .rol(Rol.ADMINISTRADOR)
+                                        .build();
+                        usuarioRepository.save(admin);
 
-            // Crear usuario regular
-            Usuario usuario1 = Usuario.builder()
-                    .username("Ruben")
-                    .email("ruben@example.com")
-                    .contrasenaHash(passwordEncoder.encode("12345678"))
-                    .rol(Rol.USUARIO)
-                    .build();
-            usuarioRepository.save(usuario1);
+                        // Crear usuario regular
+                        Usuario usuario1 = Usuario.builder()
+                                        .username("Ruben")
+                                        .email("ruben@example.com")
+                                        .contrasenaHash(passwordEncoder.encode("12345678"))
+                                        .rol(Rol.USUARIO)
+                                        .build();
+                        usuarioRepository.save(usuario1);
 
-            Usuario usuario2 = Usuario.builder()
-                    .username("Lucia")
-                    .email("lucia@example.com")
-                    .contrasenaHash(passwordEncoder.encode("12345678"))
-                    .rol(Rol.USUARIO)
-                    .build();
-            usuarioRepository.save(usuario2);
+                        Usuario usuario2 = Usuario.builder()
+                                        .username("Lucia")
+                                        .email("lucia@example.com")
+                                        .contrasenaHash(passwordEncoder.encode("12345678"))
+                                        .rol(Rol.USUARIO)
+                                        .build();
+                        usuarioRepository.save(usuario2);
 
-            // Crear categoria
-            Categoria gaming = categoriaService.crearcategoria(new Categoria(null, "Gaming", null));
-            Categoria entretenimiento = categoriaService.crearcategoria(new Categoria(null, "Entretenimiento", null));
-            Categoria educacion = categoriaService.crearcategoria(new Categoria(null, "Educacion", null));
-            Categoria Deportes = categoriaService.crearcategoria(new Categoria(null, "Deportes", null));
-            Categoria Musica = categoriaService.crearcategoria(new Categoria(null, "Musica", null));
+                        // Crear categoria
+                        Categoria gaming = categoriaService.crearcategoria(new Categoria(null, "Gaming", null));
+                        Categoria entretenimiento = categoriaService.crearcategoria(new Categoria(null, "Entretenimiento", null));
+                        Categoria educacion = categoriaService.crearcategoria(new Categoria(null, "Educacion", null));
+                        Categoria Deportes = categoriaService.crearcategoria(new Categoria(null, "Deportes", null));
+                        Categoria Musica = categoriaService.crearcategoria(new Categoria(null, "Musica", null));
 
-            // Crear video asignándole el usuario
-            Video video = Video.builder()
-                    .titulo("Mi primer video")
-                    .descripcion("Un video de prueba")
-                    .fuente("YouTube")
-                    .categoria(educacion)
-                    .usuario(usuario1)
-                    .visto(true)
-                    .miniaturaUrl("https://img.youtube.com/vi/Jp7sf6CUaxU/hqdefault.jpg")
-                    .url("https://www.youtube.com/watch?v=Jp7sf6CUaxU&pp=0gcJCfwJAYcqIYzv")
-                    .fechaGuardado(LocalDateTime.of(2025, 10, 19, 15, 30, 0))
-                    .build();
-            videoRepository.save(video);
+                        // Crear video asignándole el usuario
+                        Video video = Video.builder()
+                                        .titulo("Mi primer video")
+                                        .descripcion("Un video de prueba")
+                                        .fuente("YouTube")
+                                        .categoria(educacion)
+                                        .usuario(usuario1)
+                                        .visto(true)
+                                        .miniaturaUrl("https://img.youtube.com/vi/Jp7sf6CUaxU/hqdefault.jpg")
+                                        .url("https://www.youtube.com/watch?v=Jp7sf6CUaxU&pp=0gcJCfwJAYcqIYzv")
+                                        .fechaGuardado(LocalDateTime.of(2025, 10, 19, 15, 30, 0))
+                                        .build();
+                        videoRepository.save(video);
 
-            Video video2 = Video.builder()
-                    .titulo("Mi segundo video")
-                    .descripcion("Un video de prueba en usuario 2")
-                    .fuente("YouTube")
-                    .categoria(educacion)
-                    .usuario(usuario2)
-                    .visto(false)
-                    .miniaturaUrl("https://img.youtube.com/vi/OcM16gCD8o4/hqdefault.jpg")
-                    .url("https://www.youtube.com/watch?v=OcM16gCD8o4")
-                    .fechaGuardado(LocalDateTime.of(2025, 10, 19, 15, 30, 0))
-                    .build();
-            videoRepository.save(video2);
+                        Video video2 = Video.builder()
+                                        .titulo("Mi segundo video")
+                                        .descripcion("Un video de prueba en usuario 2")
+                                        .fuente("YouTube")
+                                        .categoria(educacion)
+                                        .usuario(usuario2)
+                                        .visto(false)
+                                        .miniaturaUrl("https://img.youtube.com/vi/OcM16gCD8o4/hqdefault.jpg")
+                                        .url("https://www.youtube.com/watch?v=OcM16gCD8o4")
+                                        .fechaGuardado(LocalDateTime.of(2025, 10, 19, 15, 30, 0))
+                                        .build();
+                        videoRepository.save(video2);
 
-            System.out.println("Datos iniciales cargados ok");
-        };
-    }
+                        System.out.println("Datos iniciales cargados ok");
+                };
+        }
 
 }

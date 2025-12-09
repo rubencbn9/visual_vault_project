@@ -20,6 +20,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+//------------------------------------------------------
+//NO ESTA EN USO
+//------------------------------------------------------
 public class VideoLista {
     
     @Id
